@@ -4,31 +4,7 @@
 
   <meta charset="utf-8">
   <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
-  <link rel="import" href="bower_components/polymer/polymer-micro.html">
-
-  <template id="test-element">
-    Hello, <content></content>.
-  </template>
-
-  <script>
-  document.addEventListener('WebComponentsReady', function() {
-
-    Polymer({
-
-      created: function() {
-        var template = document.querySelector('template#test-element');
-        var clone = template.content.cloneNode(true);
-        this.root = this.createShadowRoot();
-        this.root.appendChild(clone);
-      },
-
-      is: 'test-element'
-
-    });
-
-  });
-
-  </script>
+  <link rel="import" href="test-element.html">
 
 </head>
 
