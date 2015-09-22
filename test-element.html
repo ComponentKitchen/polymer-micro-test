@@ -1,0 +1,25 @@
+<link rel="import" href="bower_components/polymer/polymer-micro.html">
+
+<template id="test-element">
+  Hello, <content></content>.
+</template>
+
+<script>
+(function() {
+
+var template = document.currentScript.ownerDocument.querySelector('template#test-element');
+
+Polymer({
+
+  created: function() {
+    var clone = template.content.cloneNode(true);
+    this.root = this.createShadowRoot();
+    this.root.appendChild(clone);
+  },
+
+  is: 'test-element'
+
+});
+
+})();
+</script>
