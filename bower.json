@@ -1,0 +1,19 @@
+{
+  "name": "polymer-micro-test",
+  "version": "0.0.0",
+  "homepage": "https://github.com/JanMiksovsky/projects",
+  "authors": [
+    "Jan Miksovsky <jan@component.kitchen>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.1.3"
+  }
+}
