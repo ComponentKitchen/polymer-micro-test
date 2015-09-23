@@ -22,13 +22,17 @@ function createReferencesToNodesWithIds(instance) {
 
 window.MinimalComponent = {
 
+  // Use polymer-micro created callback to initialize the component.
   created: function() {
-    // Instantiate template.
-    this.root = this.createShadowRoot();
-    this.root.appendChild(this.template.content.cloneNode(true));
 
-    // Create this.$.<id> properties.
-    createReferencesToNodesWithIds(this);
+    if (this.template) {
+      // Instantiate template.
+      this.root = this.createShadowRoot();
+      this.root.appendChild(this.template.content.cloneNode(true));
+
+      // Create this.$.<id> properties.
+      createReferencesToNodesWithIds(this);
+    }
 
     // Initialize property values from attributes.
     this._marshalAttributes();
