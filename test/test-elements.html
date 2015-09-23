@@ -1,0 +1,20 @@
+<link rel="import" href="../bower_components/polymer/polymer-micro.html">
+<script src="../MinimalComponent.js"></script>
+
+<!-- An element with a simple template -->
+
+<template id="simple-element">
+  Hello
+</template>
+
+<script>
+Polymer({
+
+  behaviors: [MinimalComponent],
+
+  is: 'simple-element',
+
+  template: MinimalComponent.ownerDocument.querySelector('#simple-element')
+
+});
+</script>
