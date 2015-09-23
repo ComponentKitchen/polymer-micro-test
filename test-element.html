@@ -5,22 +5,17 @@
 </template>
 
 <script>
-(function() {
-
-// In polyfill, this reference needs to be HTMLImport.currentScript.ownerDocument...
-var template = document.currentScript.ownerDocument.querySelector('#test-element');
-
 Polymer({
 
   created: function() {
-    var clone = template.content.cloneNode(true);
     this.root = this.createShadowRoot();
-    this.root.appendChild(clone);
+    this.root.appendChild(this.template.content.cloneNode(true));
   },
 
-  is: 'test-element'
+  is: 'test-element',
+
+  // In polyfill, this reference needs to be HTMLImport.currentScript.ownerDocument...
+  template: document.currentScript.ownerDocument.querySelector('#test-element')
 
 });
-
-})();
 </script>
