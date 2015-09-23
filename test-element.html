@@ -1,7 +1,7 @@
 <link rel="import" href="bower_components/polymer/polymer-micro.html">
 
 <template id="test-element">
-  Hello, <content></content>.
+  Hello, <content></content><span id="punctuation">.</span>
 </template>
 
 <script>
@@ -10,6 +10,22 @@ Polymer({
   behaviors: [MinimalComponent],
 
   is: 'test-element',
+
+  properties: {
+    punctuation: {
+      type: String
+    }
+  },
+
+  get punctuation() {
+    return this.$.punctuation.textContent;
+  },
+  set punctuation(value) {
+    if (this.$.punctuation.textContent !== value) {
+      this.$.punctuation.textContent = value;
+      this.dispatchEvent(new CustomEvent('punctuation-changed'));
+    }
+  },
 
   template: MinimalComponent.ownerDocument.querySelector('#test-element')
 
