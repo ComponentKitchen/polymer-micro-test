@@ -7,14 +7,11 @@
 <script>
 Polymer({
 
-  created: function() {
-    this.root = this.createShadowRoot();
-    this.root.appendChild(this.template.content.cloneNode(true));
-  },
+  behaviors: [MinimalComponent],
 
   is: 'test-element',
 
-  template: document._currentScript.ownerDocument.querySelector('#test-element')
+  template: MinimalComponent.ownerDocument.querySelector('#test-element')
 
 });
 </script>
