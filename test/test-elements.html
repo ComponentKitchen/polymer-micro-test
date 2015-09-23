@@ -1,9 +1,10 @@
 <link rel="import" href="../bower_components/polymer/polymer-micro.html">
 <script src="../MinimalComponent.js"></script>
 
+
 <!-- An element with a simple template -->
 
-<template id="simple-element">
+<template id="test-template">
   Hello
 </template>
 
@@ -12,9 +13,32 @@ Polymer({
 
   behaviors: [MinimalComponent],
 
-  is: 'simple-element',
+  is: 'test-template',
 
-  template: MinimalComponent.ownerDocument.querySelector('#simple-element')
+  template: MinimalComponent.ownerDocument.querySelector('#test-template')
 
 });
 </script>
+
+
+<!-- A component that invokes a hook when created -->
+<script>
+Polymer({
+
+  behaviors: [MinimalComponent],
+
+  created: function() {
+    this.createdWasCalled = true;
+  },
+
+  createdWasCalled: false,
+
+  is: 'test-created'
+
+});
+</script>
+
+
+<!-- A component that contains another component -->
+<template id="test-containment">
+</template>
