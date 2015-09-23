@@ -14,8 +14,7 @@ Polymer({
 
   is: 'test-element',
 
-  // In polyfill, this reference needs to be HTMLImport.currentScript.ownerDocument...
-  template: document.currentScript.ownerDocument.querySelector('#test-element')
+  template: document._currentScript.ownerDocument.querySelector('#test-element')
 
 });
 </script>
