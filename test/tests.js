@@ -1,6 +1,9 @@
 suite("MinimalComponent", function() {
 
-  setup(function() {
+  var container = document.querySelector('#container');
+
+  teardown(function() {
+    window.attachedHook = null;
     window.createdHook = null;
   });
 
@@ -11,8 +14,26 @@ suite("MinimalComponent", function() {
   });
 
   test("component using behavior still has its own created method invoked", function(done) {
+    var element;
+    createdHook = function(instance) {
+      assert.equal('test-created', instance.localName);
+      done();
+    };
     element = document.createElement('test-created');
-    assert(element.createdWasCalled);
+  });
+
+  test("outer component has its created method invoked after inner component", function(done) {
+    var count = 0;
+    var expectedSequence = ['test-created', 'test-containment'];
+    createdHook = function(instance) {
+      assert.equal(expectedSequence[count], instance.localName);
+      if (count < expectedSequence.length - 1) {
+        count++;
+      } else {
+        done();
+      }
+    };
+    var element = document.createElement('test-containment');
   });
 
 });

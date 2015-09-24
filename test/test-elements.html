@@ -22,18 +22,23 @@ Polymer({
 
 
 <!-- A component that invokes a hook when created -->
+<template id="test-created">
+</template>
+
 <script>
 Polymer({
 
   behaviors: [MinimalComponent],
 
   created: function() {
-    this.createdWasCalled = true;
+    if (createdHook) {
+      createdHook(this);
+    }
   },
 
-  createdWasCalled: false,
+  is: 'test-created',
 
-  is: 'test-created'
+  template: MinimalComponent.ownerDocument.querySelector('#test-created')
 
 });
 </script>
@@ -41,4 +46,29 @@ Polymer({
 
 <!-- A component that contains another component -->
 <template id="test-containment">
+  <test-created id="inner"></test-created>
 </template>
+
+<script>
+Polymer({
+
+  behaviors: [MinimalComponent],
+
+  attached: function() {
+    if (attachedHook) {
+      attachedHook(this);
+    }
+  },
+
+  created: function() {
+    if (createdHook) {
+      createdHook(this);
+    }
+  },
+
+  is: 'test-containment',
+
+  template: MinimalComponent.ownerDocument.querySelector("#test-containment")
+
+});
+</script>
