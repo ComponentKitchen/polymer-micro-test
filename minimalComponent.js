@@ -28,7 +28,8 @@ window.MinimalComponent = {
     if (this.template) {
       // Instantiate template.
       this.root = this.createShadowRoot();
-      this.root.appendChild(this.template.content.cloneNode(true));
+      var clone = document.importNode(this.template.content, true);
+      this.root.appendChild(clone);
 
       // Create this.$.<id> properties.
       createReferencesToNodesWithIds(this);
