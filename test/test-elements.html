@@ -15,7 +15,7 @@ Polymer({
 
   is: 'test-template',
 
-  template: MinimalComponent.ownerDocument.querySelector('#test-template')
+  template: currentImport.querySelector('#test-template')
 
 });
 </script>
@@ -38,7 +38,7 @@ Polymer({
 
   is: 'test-created',
 
-  template: MinimalComponent.ownerDocument.querySelector('#test-created')
+  template: currentImport.querySelector('#test-created')
 
 });
 </script>
@@ -68,7 +68,7 @@ Polymer({
 
   is: 'test-containment',
 
-  template: MinimalComponent.ownerDocument.querySelector("#test-containment")
+  template: currentImport.querySelector("#test-containment")
 
 });
 </script>

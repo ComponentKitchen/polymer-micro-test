@@ -37,12 +37,6 @@ window.MinimalComponent = {
 
     // Initialize property values from attributes.
     this._marshalAttributes();
-  },
-
-  get ownerDocument() {
-    // Support both polyfilled and native HTML Imports.
-    var currentScript = document._currentScript || document.currentScript;
-    return currentScript.ownerDocument;
   }
 
 };
