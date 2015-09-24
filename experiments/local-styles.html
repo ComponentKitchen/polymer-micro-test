@@ -1,0 +1,22 @@
+<link rel="import" href="../bower_components/polymer/polymer-micro.html">
+
+<template id='local-styles'>
+  <style>
+  :host {
+    color: red;
+  }
+  </style>
+  <content></content>
+</template>
+
+<script>
+Polymer({
+
+  behaviors: [MinimalComponent],
+
+  is: 'local-styles',
+
+  template: currentImport.querySelector('#local-styles')
+
+});
+</script>

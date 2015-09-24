@@ -1,0 +1,18 @@
+<link rel="import" href="../bower_components/polymer/polymer-micro.html">
+
+<template id='imports-styles'>
+  <link rel="stylesheet" href="imports-styles.css">
+  <content></content>
+</template>
+
+<script>
+Polymer({
+
+  behaviors: [MinimalComponent],
+
+  is: 'imports-styles',
+
+  template: currentImport.querySelector('#imports-styles')
+
+});
+</script>
