@@ -20,12 +20,25 @@ function createReferencesToNodesWithIds(instance) {
   });
 }
 
+// Invoke basic style shimming with ShadowCSS.
+function shimTemplateStyles(template, tag) {
+  if (window.ShadowDOMPolyfill) {
+    WebComponents.ShadowCSS.shimStyling(template.content, tag);
+  }
+  template._initialized = true;
+}
+
 window.MinimalComponent = {
 
   // Use polymer-micro created callback to initialize the component.
   created: function() {
 
     if (this.template) {
+
+      if (!this.template._initialized) {
+        shimTemplateStyles(this.template, this.is);
+      }
+
       // Instantiate template.
       this.root = this.createShadowRoot();
       var clone = document.importNode(this.template.content, true);
