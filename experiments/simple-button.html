@@ -1,0 +1,19 @@
+<link rel="import" href="../bower_components/polymer/polymer-micro.html">
+
+<template id='simple-button'>
+  <button>
+    <content></content>
+  </button>
+</template>
+
+<script>
+Polymer({
+
+  behaviors: [MinimalComponent],
+
+  is: 'simple-button',
+
+  template: currentImport.querySelector('#simple-button')
+
+});
+</script>

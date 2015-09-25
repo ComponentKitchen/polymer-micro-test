@@ -1,0 +1,20 @@
+<link rel="import" href="simple-button.html">
+
+<template id='icon-button'>
+  <img src="icon.png">
+  <content></content>
+</template>
+
+<script>
+Polymer({
+
+  behaviors: [MinimalComponent],
+
+  extends: 'simple-button',
+
+  is: 'icon-button',
+
+  template: currentImport.querySelector('#icon-button')
+
+});
+</script>
