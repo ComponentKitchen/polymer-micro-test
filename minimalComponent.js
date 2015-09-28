@@ -20,28 +20,52 @@ function createReferencesToNodesWithIds(instance) {
   });
 }
 
+function findClassDefiningTemplate(obj) {
+  if (obj.hasOwnProperty('template')) {
+    return obj;
+  } else if (obj.__proto__) {
+    return findClassDefiningTemplate(obj.__proto__);
+  } else {
+    return null;
+  }
+}
+
+function getInitializedTemplate(component) {
+  if (typeof component._initializedTemplate === 'undefined') {
+    var classDefiningTemplate = findClassDefiningTemplate(component);
+    var template = classDefiningTemplate.template;
+    var initializedTemplate;
+    var baseClass = findClassDefiningTemplate(classDefiningTemplate.__proto__);
+    if (baseClass) {
+      var baseClassTemplate = getInitializedTemplate(baseClass);
+      initializedTemplate = foldTemplates(template, baseClassTemplate);
+    } else {
+      initializedTemplate = document.createElement('template');
+      initializedTemplate.content.appendChild(template.content.cloneNode(true));
+    }
+    shimTemplateStyles(initializedTemplate, component.is);
+    classDefiningTemplate._initializedTemplate = initializedTemplate;
+  }
+  return component._initializedTemplate;
+}
+
 // Invoke basic style shimming with ShadowCSS.
 function shimTemplateStyles(template, tag) {
   if (window.ShadowDOMPolyfill) {
     WebComponents.ShadowCSS.shimStyling(template.content, tag);
   }
-  template._initialized = true;
 }
 
 window.MinimalComponent = {
 
   // Use polymer-micro created callback to initialize the component.
   created: function() {
-
-    if (this.template) {
-
-      if (!this.template._initialized) {
-        shimTemplateStyles(this.template, this.is);
-      }
+    var template = getInitializedTemplate(this);
+    if (template) {
 
       // Instantiate template.
       this.root = this.createShadowRoot();
-      var clone = document.importNode(this.template.content, true);
+      var clone = document.importNode(template.content, true);
       this.root.appendChild(clone);
 
       // Create this.$.<id> properties.

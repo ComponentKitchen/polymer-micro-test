@@ -1,7 +1,7 @@
 <link rel="import" href="simple-button.html">
 
 <template id='icon-button'>
-  <img src="icon.png">
+  ☺
   <content></content>
 </template>
 
@@ -10,9 +10,11 @@ Polymer({
 
   behaviors: [MinimalComponent],
 
-  extends: 'simple-button',
+  // extends: 'simple-button',
 
   is: 'icon-button',
+
+  subclasses: 'simple-button',
 
   template: currentImport.querySelector('#icon-button')
 
