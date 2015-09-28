@@ -30,23 +30,81 @@ function findClassDefiningTemplate(obj) {
   }
 }
 
-function getInitializedTemplate(component) {
-  if (typeof component._initializedTemplate === 'undefined') {
-    var classDefiningTemplate = findClassDefiningTemplate(component);
-    var template = classDefiningTemplate.template;
-    var initializedTemplate;
-    var baseClass = findClassDefiningTemplate(classDefiningTemplate.__proto__);
-    if (baseClass) {
-      var baseClassTemplate = getInitializedTemplate(baseClass);
-      initializedTemplate = foldTemplates(template, baseClassTemplate);
-    } else {
-      initializedTemplate = document.createElement('template');
-      initializedTemplate.content.appendChild(template.content.cloneNode(true));
-    }
-    shimTemplateStyles(initializedTemplate, component.is);
-    classDefiningTemplate._initializedTemplate = initializedTemplate;
+function constructTemplate(prototype) {
+  var basePrototype = prototype.__proto__;
+  var subTemplate = prototype.hasOwnProperty('template') && prototype.template;
+  var baseTemplate = basePrototype && basePrototype.template &&
+      constructTemplate(basePrototype);
+  var template = foldTemplate(subTemplate, baseTemplate);
+  return template;
+}
+
+function foldTemplate(subTemplate, baseTemplate) {
+
+  var subClone = subTemplate && subTemplate.content.cloneNode(true);
+  var baseClone = baseTemplate && baseTemplate.content.cloneNode(true);
+
+  if (!subClone && !baseClone) {
+    // No templates.
+    return null;
   }
-  return component._initializedTemplate;
+
+  var folded = document.createElement('template');
+  if (subTemplate && !baseTemplate) {
+    // Sub only
+    folded.content.appendChild(subClone);
+  } else if (!subTemplate && baseTemplate) {
+    // Base only
+    folded.content.appendChild(baseClone);
+  } else {
+    // Sub and base; need to fold former into latter.
+    var contentNode = baseClone.querySelector('content');
+    if (contentNode) {
+      contentNode.parentNode.replaceChild(subClone, contentNode);
+      folded.content.appendChild(baseClone);
+    } else {
+      // No place in base for sub template -- throw sub template away.
+      folded.content.appendChild(baseClone);
+    }
+  }
+
+  return folded;
+}
+
+function getPrototypeForTag(tag) {
+  // REVIEW: Is there a more direct way to look this up?
+  // TODO: memoize
+  var element = document.createElement(tag);
+  return element.__proto__;
+}
+
+function initializeComponentPrototype(prototype) {
+
+  if (prototype._initialized) {
+    return; // Already initialized
+  }
+
+  if (prototype.hasOwnProperty('subclasses')) {
+    // This component class subclasses another one.
+    var baseTag = prototype.subclasses;
+    var basePrototype = getPrototypeForTag(baseTag);
+    if (!basePrototype) {
+      throw "Tried to subclass undefined element '" & baseTag & "'.";
+    }
+    initializeComponentPrototype(basePrototype);
+
+    // Destructively modify the prototype's base class.
+    prototype.__proto__ = basePrototype;
+  }
+
+  var template = constructTemplate(prototype);
+  if (template) {
+    shimTemplateStyles(template, prototype.is);
+    prototype._template = template;
+  }
+
+  prototype._initialized = true;
+
 }
 
 // Invoke basic style shimming with ShadowCSS.
@@ -60,12 +118,14 @@ window.MinimalComponent = {
 
   // Use polymer-micro created callback to initialize the component.
   created: function() {
-    var template = getInitializedTemplate(this);
-    if (template) {
+
+    initializeComponentPrototype(this.__proto__);
+
+    if (this._template) {
 
       // Instantiate template.
       this.root = this.createShadowRoot();
-      var clone = document.importNode(template.content, true);
+      var clone = document.importNode(this._template.content, true);
       this.root.appendChild(clone);
 
       // Create this.$.<id> properties.
