@@ -1,11 +1,24 @@
 /*
- * A minimal set of helper functions to go on top of polymer-micro:
+ * A small set of helper functions to go on top of polymer-micro:
  *
- *   1. <template> instantiation
- *   2. Polymer-style automatic node finding
+ *   1. <template> instantiation, including CSS style shimming
+ *   2. <template> inheritance
+ *   3. Polymer-style automatic node finding
  */
 
 (function() {
+
+// Given a component prototype, return the complete inherited template.
+// Each subclass will have its template folded into the template inherited from
+// its base classes. See notes at foldTemplate.
+function constructInheritedTemplate(prototype) {
+  var basePrototype = prototype.__proto__;
+  var subTemplate = prototype.hasOwnProperty('template') && prototype.template;
+  var baseTemplate = basePrototype && basePrototype.template &&
+      constructInheritedTemplate(basePrototype);
+  var template = foldTemplate(subTemplate, baseTemplate);
+  return template;
+}
 
 // Polymer-style automatic node finding.
 // See https://www.polymer-project.org/1.0/docs/devguide/local-dom.html#node-finding.
@@ -30,15 +43,32 @@ function findClassDefiningTemplate(obj) {
   }
 }
 
-function constructTemplate(prototype) {
-  var basePrototype = prototype.__proto__;
-  var subTemplate = prototype.hasOwnProperty('template') && prototype.template;
-  var baseTemplate = basePrototype && basePrototype.template &&
-      constructTemplate(basePrototype);
-  var template = foldTemplate(subTemplate, baseTemplate);
-  return template;
-}
-
+// Given two templates, "fold" one inside the other. For now, this just entails
+// putting the first inside the location of the first <content> node in the
+// second template.
+//
+// Example: if the first (sub) template is
+//
+//   <template>
+//     Hello, <content></content>.
+//   </template>
+//
+// and the second (base) template is
+//
+//   <template>
+//     <b>
+//       <content></content>
+//     </b>
+//   </template>
+//
+// Then the returned folded template is
+//
+//   <template>
+//     <b>
+//       Hello, <content></content>.
+//     </b>
+//   </template>
+//
 function foldTemplate(subTemplate, baseTemplate) {
 
   var subClone = subTemplate && subTemplate.content.cloneNode(true);
@@ -78,12 +108,20 @@ function getPrototypeForTag(tag) {
   return element.__proto__;
 }
 
+// Initialize the given prototype so that it can be used to instantiate
+// components. The first invocation of this will construct the component
+// template, including any template portions inherited from base classes. This
+// will also handle shimming CSS styles under the Shadow DOM polyfill.
+// Subsequent invocations of this function will have no effect.
 function initializeComponentPrototype(prototype) {
 
   if (prototype._initialized) {
     return; // Already initialized
   }
 
+  // Look for the "subclasses" key. We'd much prefer to use "extends", but
+  // currently Polymer passes that straight to document.registerElement(), which
+  // rejects attempts to extend non-native elements.
   if (prototype.hasOwnProperty('subclasses')) {
     // This component class subclasses another one.
     var baseTag = prototype.subclasses;
@@ -91,13 +129,15 @@ function initializeComponentPrototype(prototype) {
     if (!basePrototype) {
       throw "Tried to subclass undefined element '" & baseTag & "'.";
     }
+
+    // Ensure the base class is set up if it hasn't been instantiated before.
     initializeComponentPrototype(basePrototype);
 
     // Destructively modify the prototype's base class.
     prototype.__proto__ = basePrototype;
   }
 
-  var template = constructTemplate(prototype);
+  var template = constructInheritedTemplate(prototype);
   if (template) {
     shimTemplateStyles(template, prototype.is);
     prototype._template = template;
