@@ -1,6 +1,14 @@
 <link rel="import" href="../bower_components/polymer/polymer-micro.html">
 
 <template id='simple-button'>
+  <style>
+  :host {
+    display: inline-block;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+  }
+  </style>
   <button>
     <content></content>
   </button>
