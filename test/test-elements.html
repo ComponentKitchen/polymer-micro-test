@@ -72,3 +72,37 @@ Polymer({
 
 });
 </script>
+
+
+<!-- A component base class -->
+<template id="base-class">BASE[<content></content>]</template>
+
+<script>
+Polymer({
+
+  behaviors: [MinimalComponent],
+
+  is: 'base-class',
+
+  template: currentImport.querySelector("#base-class")
+
+});
+</script>
+
+
+<!-- A component subclass -->
+<template id="sub-class">SUB(<content></content>)</template>
+
+<script>
+Polymer({
+
+  behaviors: [MinimalComponent],
+
+  is: 'sub-class',
+
+  subclasses: 'base-class',
+
+  template: currentImport.querySelector("#sub-class")
+
+});
+</script>

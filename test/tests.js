@@ -36,4 +36,10 @@ suite("MinimalComponent", function() {
     var element = document.createElement('test-containment');
   });
 
+  test("subclass template inserted into base class' template", function() {
+    var element = document.createElement('sub-class');
+    var template = element.constructor.prototype._template;
+    assert.equal(template.content.textContent, "BASE[SUB()]");
+  });
+
 });
