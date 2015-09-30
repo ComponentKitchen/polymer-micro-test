@@ -36,10 +36,28 @@ suite("MinimalComponent", function() {
     var element = document.createElement('test-containment');
   });
 
+  test("subclass instance is also instanceof base class", function() {
+    var baseElement = document.createElement('base-class');
+    var baseClass = baseElement.constructor;
+    var subElement = document.createElement('sub-class');
+    assert(subElement instanceof baseClass);
+  });
+
   test("subclass template inserted into base class' template", function() {
     var element = document.createElement('sub-class');
     var template = element.constructor.prototype._template;
     assert.equal(template.content.textContent, "BASE[SUB()]");
+  });
+
+  test("subclass instance has access to members inherited from base class", function() {
+    var element = document.createElement('sub-class');
+    assert(element.flag);
+  });
+
+  test("subclass can override members inherited from base class", function() {
+    var element = document.createElement('sub-class');
+    element.textContent = "Hello";
+    assert.equal(element.text, "HELLO");
   });
 
 });

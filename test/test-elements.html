@@ -82,9 +82,17 @@ Polymer({
 
   behaviors: [MinimalComponent],
 
+  // Simple property.
+  flag: true,
+
   is: 'base-class',
 
-  template: currentImport.querySelector("#base-class")
+  template: currentImport.querySelector("#base-class"),
+
+  // Sample accessor.
+  get text() {
+    return this.textContent;
+  }
 
 });
 </script>
@@ -102,7 +110,16 @@ Polymer({
 
   subclasses: 'base-class',
 
-  template: currentImport.querySelector("#sub-class")
+  template: currentImport.querySelector("#sub-class"),
+
+  // Override base class accessor.
+  get text() {
+    var basePrototype = this.__proto__.__proto__;
+    var basePropertyInfo = Object.getOwnPropertyDescriptor(basePrototype, 'text');
+    var baseTextGetter = basePropertyInfo.get;
+    var baseText = baseTextGetter.call(this);
+    return baseText.toUpperCase();
+  }
 
 });
 </script>
