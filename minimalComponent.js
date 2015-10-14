@@ -14,6 +14,12 @@
 function constructInheritedTemplate(prototype) {
   var basePrototype = prototype.__proto__;
   var subTemplate = prototype.hasOwnProperty('template') && prototype.template;
+  if (typeof subTemplate === 'string') {
+    // Convert simple string to real template.
+    var text = subTemplate;
+    subTemplate = document.createElement('template');
+    subTemplate.content.textContent = text;
+  }
   var baseTemplate = basePrototype && basePrototype.template &&
       constructInheritedTemplate(basePrototype);
   var template = foldTemplate(subTemplate, baseTemplate);

@@ -21,6 +21,21 @@ Polymer({
 </script>
 
 
+<!-- An element with a string template -->
+
+<script>
+Polymer({
+
+  behaviors: [MinimalComponent],
+
+  is: 'test-template-string',
+
+  template: "Hello"
+
+});
+</script>
+
+
 <!-- A component that invokes a hook when created -->
 <template id="test-created">
 </template>

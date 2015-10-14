@@ -13,6 +13,12 @@ suite("MinimalComponent", function() {
     assert(element.root.textContent.trim(), "Hello");
   });
 
+  test("template can be a string", function() {
+    var element = document.createElement('test-template-string');
+    assert(element.root);
+    assert(element.root.textContent.trim(), "Hello");
+  });
+
   test("component using behavior still has its own created method invoked", function(done) {
     var element;
     createdHook = function(instance) {
