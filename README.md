@@ -15,4 +15,4 @@ polymer-micro. The behavior adds the following features:
 The file test-element.html uses polymer-micro and the above behavior to define a
 very simple component. The page index.html shows that component in use. You
 can view that page in the
-[live demo](https://ComponentKitchen.github.io/polymer-micro-test).
+[live demo](https://componentkitchen.github.io/polymer-micro-test/index.html).
