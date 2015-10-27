@@ -1,8 +1,19 @@
 /*
- * A minimal set of helper functions to go on top of polymer-micro:
+ * A minimal set of features to go on top of polymer-micro:
  *
- *   1. <template> instantiation
- *   2. Polymer-style automatic node finding
+ *   1. Creation of a shadow root
+ *   2. <template> instantiation
+ *   3. Shimming of CSS styles under the Shadow DOM polyfill
+ *   4. Polymer-style automatic node finding (not sure if we really need this)
+ *
+ * This set of features is packaged as a Polymer behavior, so it can be mixed
+ * in to a component with the "behaviors" key:
+ *
+ *   Polymer({
+ *     behaviors: [MinimalComponent],
+ *     ...
+ *   });
+ *
  */
 
 (function() {

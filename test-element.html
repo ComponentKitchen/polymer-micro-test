@@ -1,16 +1,25 @@
+<!--
+Sample web component created using polymer-micro and a small set of helpers.
+-->
+
 <link rel="import" href="bower_components/polymer/polymer-micro.html">
 
+<!-- Note that we can use a real template, not a dom-module. -->
 <template id="test-element">
   Hello, <content></content><span id="punctuation">.</span>
 </template>
 
 <script>
+// polymer-micro supplies a slimmed-down version of the Polymer class factory.
 Polymer({
 
+  // Since polymer-micro supports Polymer behaviors, we can mix in the
+  // additional features we want as a behavior.
   behaviors: [MinimalComponent],
 
   is: 'test-element',
 
+  // polymer-micro supports marshalling of attributes to properties.
   properties: {
     punctuation: {
       type: String
@@ -32,6 +41,10 @@ Polymer({
     }
   },
 
+  // The component can supply a reference to its own template. This reference
+  // is grabbed at the point this file is imported (as an HTML Import). The
+  // "currentImport" global is defined by Polymer. Here we use it to scan
+  // through this document and find the template element at the top of the file.
   template: currentImport.querySelector('#test-element')
 
 });
