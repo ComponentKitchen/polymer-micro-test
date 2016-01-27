@@ -51,7 +51,11 @@ window.MinimalComponent = {
       }
 
       // Instantiate template.
-      this.root = this.createShadowRoot();
+      if (this.template.getAttribute("noshadowroot") !== null) {
+        this.root = this;
+      } else {
+        this.root = this.createShadowRoot();
+      }
       var clone = document.importNode(this.template.content, true);
       this.root.appendChild(clone);
 
