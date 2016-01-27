@@ -66,6 +66,11 @@ window.MinimalComponent = {
     // Initialize property values from attributes.
     // This invokes an undocumented method internal to Polymer.
     this._takeAttributesToModel(this);
+
+    // Shortcut for this.root.querySelector(). 
+    // Mainly useful when not using a shadow root, 
+    // where the this.$ syntax shouldn't really be used
+    this.qs = this.root.querySelector.bind(this.root);
   }
 
 };
