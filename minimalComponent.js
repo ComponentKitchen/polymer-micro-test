@@ -51,7 +51,11 @@ window.MinimalComponent = {
       }
 
       // Instantiate template.
-      this.root = this.createShadowRoot();
+      if (this.template.getAttribute("noshadowroot") !== null) {
+        this.root = this;
+      } else {
+        this.root = this.createShadowRoot();
+      }
       var clone = document.importNode(this.template.content, true);
       this.root.appendChild(clone);
 
@@ -61,7 +65,12 @@ window.MinimalComponent = {
 
     // Initialize property values from attributes.
     // This invokes an undocumented method internal to Polymer.
-    this._marshalAttributes();
+    this._takeAttributesToModel(this);
+
+    // Shortcut for this.root.querySelector(). 
+    // Mainly useful when not using a shadow root, 
+    // where the this.$ syntax shouldn't really be used
+    this.qs = this.root.querySelector.bind(this.root);
   }
 
 };
