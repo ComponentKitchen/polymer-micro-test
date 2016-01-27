@@ -65,7 +65,7 @@ window.MinimalComponent = {
 
     // Initialize property values from attributes.
     // This invokes an undocumented method internal to Polymer.
-    this._marshalAttributes();
+    this._takeAttributesToModel(this);
   }
 
 };
